@@ -28,6 +28,7 @@
 #include <components/sceneutil/positionattitudetransform.hpp>
 #include <components/sceneutil/workqueue.hpp>
 #include <components/sceneutil/unrefqueue.hpp>
+#include <components/sceneutil/postprocessmanager.hpp>
 
 #include <components/terrain/terraingrid.hpp>
 
@@ -167,8 +168,15 @@ namespace MWRender
         , mFieldOfViewOverride(0.f)
         , mFieldOfViewOverridden(false)
     {
+        bool advancedLighting = Settings::Manager::getBool("advanced lighting", "Shaders");
+
         resourceSystem->getSceneManager()->setParticleSystemMask(MWRender::Mask_ParticleSystem);
-        resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders");
+
+        if (advancedLighting)
+            resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders/ds");
+        else
+            resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders");
+
         resourceSystem->getSceneManager()->setForceShaders(Settings::Manager::getBool("force shaders", "Shaders"));
         resourceSystem->getSceneManager()->setClampLighting(Settings::Manager::getBool("clamp lighting", "Shaders"));
         resourceSystem->getSceneManager()->setForcePerPixelLighting(Settings::Manager::getBool("force per pixel lighting", "Shaders"));
@@ -183,7 +191,12 @@ namespace MWRender
         mSceneRoot = sceneRoot;
         sceneRoot->setStartLight(1);
 
-        mRootNode->addChild(sceneRoot);
+        if (advancedLighting)
+        {
+            mRootNode->addChild(SceneUtil::createPostprocessSubgraph(resourceSystem->getSceneManager()->getShaderManager(), sceneRoot));
+        }
+        else
+            mRootNode->addChild(sceneRoot);
 
         mPathgrid.reset(new Pathgrid(mRootNode));
 
@@ -872,7 +885,7 @@ namespace MWRender
 
     void RenderingManager::setFogColor(const osg::Vec4f &color)
     {
-        mViewer->getCamera()->setClearColor(color);
+        mViewer->getCamera()->setClearColor(osg::Vec4f());//setClearColor(color);
 
         mStateUpdater->setFogColor(color);
     }
