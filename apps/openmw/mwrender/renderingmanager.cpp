@@ -173,7 +173,7 @@ namespace MWRender
         resourceSystem->getSceneManager()->setParticleSystemMask(MWRender::Mask_ParticleSystem);
 
         if (advancedLighting)
-            resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders/ds");
+            resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders_ds");
         else
             resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders");
 
