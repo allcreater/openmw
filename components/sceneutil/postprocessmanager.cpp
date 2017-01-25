@@ -144,7 +144,6 @@ namespace SceneUtil
         texDepth->setSourceFormat(GL_DEPTH_COMPONENT);
 
         osg::Camera* cam = new osg::Camera();
-        cam->setNodeMask(1 << 15);
         cam->setReferenceFrame(osg::Transform::RELATIVE_RF);
         cam->setRenderTargetImplementation(osg::Camera::FRAME_BUFFER_OBJECT);
         cam->attach(osg::Camera::BufferComponent::COLOR_BUFFER0, tex1);
@@ -154,6 +153,7 @@ namespace SceneUtil
         cam->addChild(child);
 
         auto quad = makeFullscreenQuad();
+        quad->setNodeMask(1 << 15);
         quad->setCullingActive(false);
         quad->getOrCreateStateSet()->setTextureAttribute(0, tex1);
         quad->getOrCreateStateSet()->addUniform(new osg::Uniform("bufferColor", 0));
@@ -167,11 +167,11 @@ namespace SceneUtil
         );
         quad->getOrCreateStateSet()->setAttributeAndModes(sp, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED);
 
-        auto geode = new osg::Geode();
-        geode->setCullingActive(false);
-        geode->addDrawable(quad);
+        auto geode = new osg::Group();
+        //geode->setCullingActive(false);
+        geode->addChild(quad);
         geode->addChild(cam);
-        geode->setNodeMask(1 << 15);
+        
         
         return geode;
     }

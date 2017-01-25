@@ -1,11 +1,14 @@
 #define MAX_LIGHTS 8
 
+#define COLOR_MODE 1
+#define CLAMP 1
+
 vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor)
 {
     vec3 lightDir;
     float d;
 
-#if @colorMode == 2
+#if (COLOR_MODE == 2)
     vec4 diffuse = vertexColor;
     vec3 ambient = vertexColor.xyz;
 #else
@@ -25,13 +28,13 @@ vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor)
 
     lightResult.xyz += gl_LightModel.ambient.xyz * ambient;
 
-#if @colorMode == 1
+#if (COLOR_MODE == 1)
     lightResult.xyz += vertexColor.xyz;
 #else
     lightResult.xyz += gl_FrontMaterial.emission.xyz;
 #endif
 
-#if @clamp
+#if (CLAMP)
     lightResult = clamp(lightResult, vec4(0.0, 0.0, 0.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0));
 #else
     lightResult = max(lightResult, 0.0);

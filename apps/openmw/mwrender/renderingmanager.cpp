@@ -173,13 +173,20 @@ namespace MWRender
         resourceSystem->getSceneManager()->setParticleSystemMask(MWRender::Mask_ParticleSystem);
 
         if (advancedLighting)
+        {
             resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders_ds");
+            resourceSystem->getSceneManager()->setForceShaders(true);
+            resourceSystem->getSceneManager()->setClampLighting(false);
+            resourceSystem->getSceneManager()->setForcePerPixelLighting(true);
+        }
         else
+        {
             resourceSystem->getSceneManager()->setShaderPath(resourcePath + "/shaders");
-
-        resourceSystem->getSceneManager()->setForceShaders(Settings::Manager::getBool("force shaders", "Shaders"));
-        resourceSystem->getSceneManager()->setClampLighting(Settings::Manager::getBool("clamp lighting", "Shaders"));
-        resourceSystem->getSceneManager()->setForcePerPixelLighting(Settings::Manager::getBool("force per pixel lighting", "Shaders"));
+            resourceSystem->getSceneManager()->setForceShaders(Settings::Manager::getBool("force shaders", "Shaders"));
+            resourceSystem->getSceneManager()->setClampLighting(Settings::Manager::getBool("clamp lighting", "Shaders"));
+            resourceSystem->getSceneManager()->setForcePerPixelLighting(Settings::Manager::getBool("force per pixel lighting", "Shaders"));
+        }
+        
         resourceSystem->getSceneManager()->setAutoUseNormalMaps(Settings::Manager::getBool("auto use object normal maps", "Shaders"));
         resourceSystem->getSceneManager()->setNormalMapPattern(Settings::Manager::getString("normal map pattern", "Shaders"));
         resourceSystem->getSceneManager()->setNormalHeightMapPattern(Settings::Manager::getString("normal height map pattern", "Shaders"));

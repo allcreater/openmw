@@ -4,7 +4,7 @@ uniform sampler2DRect bufferColor;
 uniform sampler2DRect bufferNormalShininess;
 uniform sampler2DRect bufferDepth;
 
-//# include "lighting.glsl"
+#include "lighting.glsl"
 
 vec3 getFragPos(in vec3 screenCoord)
 {

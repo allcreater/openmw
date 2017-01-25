@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>    // std::reverse
-
+#include <locale>
 #include <components/misc/stringops.hpp>
 
 namespace MWDialogue
@@ -76,6 +76,7 @@ public:
     void highlightKeywords (Point beg, Point end, std::vector<Match>& out)
     {
         std::vector<Match> matches;
+        std::locale loc;
         for (Point i = beg; i != end; ++i)
         {
             // check if previous character marked start of new word
@@ -83,7 +84,10 @@ public:
             {
                 Point prev = i;
                 --prev;
-                if(isalpha(*prev))
+                
+                auto p = *prev;
+                if (std::isalpha(p, loc))
+                //if(isalpha(*prev))
                     continue;
             }
 
